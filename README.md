@@ -16,7 +16,7 @@ Dependencies
 * [qemu](http://wiki.qemu.org/Main_Page)
 * Python >= 3.4
 * ~~[python-kvm](https://github.com/fmenabe/python-kvm/)~~
-* [https://www.libvirt.org/python.html](python-libvirt)
+* [python-libvirt](https://www.libvirt.org/python.html)
 
 Setup
 -----
