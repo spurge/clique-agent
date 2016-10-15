@@ -59,4 +59,4 @@ Then run `netctl start bridge`
 Testing
 -------
 
-`pyton -m unittest test/**/*.py`
+`python -m unittest test/**/*.py`
