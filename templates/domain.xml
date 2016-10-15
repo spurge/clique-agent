@@ -1,11 +1,7 @@
 <domain type="qemu">
     <name></name>
-    <cpu>
-        <topology cores="1" sockets="1" threads="1" />
-    </cpu>
-    <memory unit="MB">512</memory>
-    <currentMemory unit="MB">512</currentMemory>
     <vcpu>1</vcpu>
+    <memory unit="MB">512</memory>
     <os>
         <type>hvm</type>
         <boot dev="cdrom" />

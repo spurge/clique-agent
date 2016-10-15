@@ -5,6 +5,8 @@ import libvirt
 from os import listdir, path
 from xml.etree import ElementTree
 
+from template import get_domain
+
 
 class Virtz:
 
@@ -50,7 +52,7 @@ class Virtz:
 
         return machine
 
-    def create(self, name, image, cpu, mem):
+    def create(self, name, **kwargs):
         machine = self.get(name)
 
         if machine is not None and machine.isActive():
@@ -58,17 +60,7 @@ class Virtz:
 
         self.remove(name)
 
-        xml = ElementTree.parse('templates/domain.xml')
-        root = xml.getroot()
-
-        name_el = root.find('name')
-        name_el.text = name
-
-        self.conn.defineXML(
-            ElementTree.tostring(root,
-                                 encoding='utf8',
-                                 method='xml').decode('utf-8')
-        )
+        self.conn.defineXML(get_domain(name, **kwargs))
 
         return self.get(name)
 
