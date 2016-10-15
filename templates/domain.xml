@@ -14,7 +14,7 @@
     <clock offset="utc" />
     <devices>
         <disk device="cdrom" type="file">
-            <source file="images/alpine-3.4.4-x86_64.iso" />
+            <source file="/var/images/alpine-3.4.4-x86_64.iso" />
             <driver name="qemu" type="raw" />
             <target bus="ide" dev="hdc" />
             <readyonly />
