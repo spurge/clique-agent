@@ -85,3 +85,14 @@ class Virtz:
 
         if machine is not None and machine.isActive():
             machine.destroy()
+
+    def stats(self):
+        return dict(cpu=self.conn.getCPUStats(0),
+                    mem=self.conn.getMemoryStats(0),
+                    machines=[dict(name=vm.name(),
+                                   running=vm.isActive() > 0,
+                                   cpu=vm.getCPUStats(0)
+                                   if vm.isActive() else None,
+                                   mem=vm.memoryStats()
+                                   if vm.isActive() else None)
+                              for vm in self.conn.listAllDomains()])

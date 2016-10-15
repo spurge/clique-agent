@@ -53,9 +53,9 @@ class TestVirtz(TestCase):
 
     def test_start_and_stop(self):
         self.machine = self.virtz.start('testmachine',
-                                   image='alpine',
-                                   cpu=1,
-                                   mem=512)
+                                        image='alpine',
+                                        cpu=1,
+                                        mem=512)
         self.assertEqual(self.machine.isActive(), True)
 
         self.virtz.stop('testmachine')
@@ -63,9 +63,9 @@ class TestVirtz(TestCase):
 
     def test_double_start(self):
         self.machine = self.virtz.start('testmachine',
-                                   image='alpine',
-                                   cpu=1,
-                                   mem=512)
+                                        image='alpine',
+                                        cpu=1,
+                                        mem=512)
         self.assertEqual(self.machine.isActive(), True)
 
         machine = self.virtz.start('testmachine',
@@ -76,3 +76,29 @@ class TestVirtz(TestCase):
 
         self.assertEqual(self.machine.UUIDString(),
                          machine.UUIDString())
+
+    def test_stats(self):
+        self.machine = self.virtz.start('othermachine',
+                                        image='alpine',
+                                        cpu=1,
+                                        mem=512)
+        stats = self.virtz.stats()
+
+        self.assertIsInstance(stats['cpu'], dict)
+        self.assertIsInstance(stats['mem'], dict)
+        self.assertIsInstance(stats['machines'], list)
+        self.assertEqual(len(stats['machines']), 2)
+
+        testmachine = next(m for m in stats['machines']
+                           if m['name'] == 'testmachine')
+
+        self.assertEqual(testmachine['running'], False)
+        self.assertIsNone(testmachine['cpu'])
+        self.assertIsNone(testmachine['mem'])
+
+        othermachine = next(m for m in stats['machines']
+                            if m['name'] == 'othermachine')
+
+        self.assertEqual(othermachine['running'], True)
+        self.assertIsInstance(othermachine['cpu'], list)
+        self.assertIsInstance(othermachine['mem'], dict)
