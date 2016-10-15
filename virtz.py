@@ -2,13 +2,45 @@
 
 import libvirt
 
+from os import listdir, path
 from xml.etree import ElementTree
 
 
 class Virtz:
 
     def __init__(self):
-        self.conn = libvirt.open('qemu:///system')
+        self.network_dir = './networks'
+        self.libvirt_host = 'qemu:///system'
+
+        self.connect()
+        self.networks()
+
+    def connect(self):
+        self.conn = libvirt.open(self.libvirt_host)
+
+    def networks(self):
+        for filename in listdir(self.network_dir):
+            xml = ElementTree.parse(path.join(self.network_dir,
+                                              filename))
+            name = xml.getroot().find('name').text
+
+            try:
+                network = self.conn.networkLookupByName(name)
+
+                if network is not None:
+                    network.destroy()
+                    network.undefine()
+            except:
+                pass
+
+            self.conn.networkDefineXML(
+                ElementTree.tostring(xml.getroot(),
+                                     encoding='utf8',
+                                     method='xml').decode('utf-8')
+            )
+
+            network = self.conn.networkLookupByName(name)
+            network.create()
 
     def get(self, name):
         try:
@@ -19,6 +51,11 @@ class Virtz:
         return machine
 
     def create(self, name, image, cpu, mem):
+        machine = self.get(name)
+
+        if machine is not None and machine.isActive():
+            return machine
+
         self.remove(name)
 
         xml = ElementTree.parse('templates/domain.xml')
@@ -43,12 +80,14 @@ class Virtz:
 
     def start(self, name, **kwargs):
         machine = self.create(name, **kwargs)
-        machine.create()
+
+        if not machine.isActive():
+            machine.create()
 
         return machine
 
     def stop(self, name):
         machine = self.get(name)
 
-        if machine is not None:
+        if machine is not None and machine.isActive():
             machine.destroy()

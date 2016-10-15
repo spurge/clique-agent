@@ -3,7 +3,6 @@
     <cpu>
         <topology cores="1" sockets="1" threads="1" />
     </cpu>
-    <uuid></uuid>
     <memory unit="MB">512</memory>
     <currentMemory unit="MB">512</currentMemory>
     <vcpu>1</vcpu>
@@ -21,7 +20,7 @@
             <address bus="1" controller="0" target="0" type="drive" unit="0" />
         </disk>
         <interface type="network">
-            <source network="default" />
+            <source network="bridge" />
         </interface>
     </devices>
 </domain>

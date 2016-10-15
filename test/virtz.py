@@ -12,15 +12,18 @@ class TestVirtz(TestCase):
         self.machine = None
 
     def tearDown(self):
-        if self.machine:
+        try:
+            self.machine.destroy()
             self.machine.undefine()
+        except:
+            pass
 
         self.virtz.conn.close()
 
     def test_connection(self):
         self.assertIsNotNone(self.virtz.conn)
 
-    def test_create(self):
+    def test_create_and_remove(self):
         machine = self.virtz.create('testmachine',
                                     image='alpine',
                                     cpu=1,
@@ -40,7 +43,6 @@ class TestVirtz(TestCase):
         self.assertNotEqual(self.machine.UUIDString(),
                             machine.UUIDString())
 
-    def test_remove(self):
         self.virtz.remove('testmachine')
 
         try:
@@ -49,12 +51,28 @@ class TestVirtz(TestCase):
         except:
             pass
 
-    def test_start(self):
+    def test_start_and_stop(self):
+        self.machine = self.virtz.start('testmachine',
+                                   image='alpine',
+                                   cpu=1,
+                                   mem=512)
+        self.assertEqual(self.machine.isActive(), True)
+
+        self.virtz.stop('testmachine')
+        self.assertEqual(self.machine.isActive(), False)
+
+    def test_double_start(self):
+        self.machine = self.virtz.start('testmachine',
+                                   image='alpine',
+                                   cpu=1,
+                                   mem=512)
+        self.assertEqual(self.machine.isActive(), True)
+
         machine = self.virtz.start('testmachine',
                                    image='alpine',
                                    cpu=1,
                                    mem=512)
-        self.assertIsNotNone(self.machine.UUIDString(), machine.UUIDString())
+        self.assertEqual(machine.isActive(), True)
 
-    def test_stop(self):
-        self.virtz.stop('testmachine')
+        self.assertEqual(self.machine.UUIDString(),
+                         machine.UUIDString())
