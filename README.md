@@ -41,3 +41,17 @@ polkit.addRule(function(action, subject) {
     }
 });
 ```
+
+### Create a network bridge using netctl
+
+In `/etc/netctl/bridge`
+
+```
+Description="Example Bridge connection"
+Interface=br0
+Connection=bridge
+BindsToInterfaces=(eth0)
+IP=dhcp
+```
+
+Then run `netctl start bridge`
