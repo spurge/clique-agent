@@ -30,7 +30,9 @@ class Virtz:
                 network = self.conn.networkLookupByName(name)
 
                 if network is not None:
-                    network.destroy()
+                    if network.isActive():
+                        network.destroy()
+
                     network.undefine()
             except:
                 pass
