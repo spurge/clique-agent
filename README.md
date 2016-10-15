@@ -1,7 +1,7 @@
-Clique
-======
+Clique Agent
+============
 
-A KVM controller that:
+A KVM agent that:
 
 * Listens on a RabbitMQ task queue for virtualization jobs, which could be
     - setup some new machine
