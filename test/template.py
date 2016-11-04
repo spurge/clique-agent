@@ -3,7 +3,7 @@
 from unittest import TestCase
 from xml.etree import ElementTree
 
-from template import get_domain
+from clique_agent.template import get_domain
 
 
 class TestTemplate(TestCase):

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from clique_connector import Connector
-from threading import Event, Thread
+from threading import Thread
 
 from .virtz import Virtz
 
@@ -29,19 +29,24 @@ class Agent:
 
         return self.__virtz
 
+    def confirm_machine(self, name, image, cpu, mem, disc, pkey):
+        return True
+
     def create_machine(self, name, image, cpu, mem, disc, pkey):
         machine = self.virtz.start(name, image=image, cpu=cpu,
                                    mem=mem, disc=disc)
+
+        print(machine)
 
         return machine
 
     def _start_listening(self):
         channel_close, \
             observable = self.connector.wait_for_machines(
+                            self.confirm_machine,
                             self.create_machine)
 
-        self._start_disposable = observable.subscribe(
-            lambda cs: print(cs))
+        self._start_disposable = observable.subscribe()
 
         while not self._start_disposable.is_disposed:
             pass
@@ -50,12 +55,6 @@ class Agent:
 
     def start(self):
         self.stop()
-
-        self._start_stop_event = Event()
-
-        channel_close, \
-            observable = self.connector.wait_for_machines(
-                            self.create_machine)
 
         self._start_thread = Thread(target=self._start_listening)
         self._start_thread.start()

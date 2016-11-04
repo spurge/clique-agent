@@ -3,7 +3,7 @@
 from xml.etree import ElementTree
 
 def get_domain(name, image, cpu, mem):
-    xml = ElementTree.parse('templates/domain.xml')
+    xml = ElementTree.parse('clique_agent/templates/domain.xml')
     root = xml.getroot()
 
     name_el = root.find('name')

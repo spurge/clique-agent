@@ -18,7 +18,11 @@ class TestAgent(TestCase):
         self.agent.virtz.conn.close()
 
     @patch('clique_agent.Agent.create_machine')
-    def test_start_create_stop(self, create_machine):
+    @patch('clique_agent.Agent.confirm_machine')
+    def test_start_create_stop(self, confirm_machine, create_machine):
+        confirm_machine.return_value = True
+        create_machine.return_value = dict(host='testhost',
+                                           username='some_user')
         self.agent.start()
 
         connector = Connector('127.0.0.1')
@@ -28,5 +32,6 @@ class TestAgent(TestCase):
 
         self.agent.stop()
 
-        print(machine)
-        print(create_machine.called)
+        self.assertEqual(machine['host'], 'testhost')
+        self.assertEqual(machine['username'], 'some_user')
+        self.assertTrue(create_machine.called)
