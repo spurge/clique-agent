@@ -2,7 +2,7 @@
 
 from unittest import TestCase
 
-from virtz import Virtz
+from clique_agent import Virtz
 
 
 class TestVirtz(TestCase):

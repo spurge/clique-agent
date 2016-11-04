@@ -5,13 +5,13 @@ import libvirt
 from os import listdir, path
 from xml.etree import ElementTree
 
-from template import get_domain
+from .template import get_domain
 
 
 class Virtz:
 
     def __init__(self):
-        self.network_dir = './networks'
+        self.network_dir = './clique_agent/networks'
         self.libvirt_host = 'qemu:///system'
 
         self.connect()
